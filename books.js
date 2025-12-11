@@ -59,7 +59,10 @@ type Mutation {
 // --- 3. THE RESOLVERS (The Magic) ---
 const resolvers = {
     Query: {
-        books: () => books,
+        books: () => {
+            console.log('🔥 Query.books fired! (Fetching all books)'); // <--- Spy 1
+            return books
+        },
         reviews: () => reviews,
         // NEW RESOLVER
         // The first argument is unused here (root), so we use '_'
@@ -73,12 +76,12 @@ const resolvers = {
     // This is called a "Nested Resolver" or "Field Level Resolver".
     Book: {
         reviews: (parent) => {
+            console.log(`🔎 Book.reviews fired for Book ID: ${parent.id}`); // <--- Spy 2
             return reviews.filter(review => review.bookId === parent.id)
         }
     },
     Review: {
         book: (parent) => {
-            console.log(parent)
             return books.find(book => book.id === parent.bookId)
         }
     },
